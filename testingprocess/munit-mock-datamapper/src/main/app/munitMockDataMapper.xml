@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <data-mapper:config name="xml_to_xml" transformationGraphPath="xml_to_xml.grf" doc:name="xml_to_xml"/>
+    <flow name="munitMockDataMapperFlow" doc:name="munitMockDataMapperFlow" processingStrategy="synchronous">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="triggerDM_XMLtoXML" doc:name="HTTP"/>
+        <set-payload value="&lt;table&gt;&lt;record&gt;&lt;field name=&quot;COLUMN2&quot; type=&quot;java.lang.String&quot;&gt;row1&lt;/field&gt;&lt;field name=&quot;COLUMN1&quot; type=&quot;java.math.BigDecimal&quot;&gt;1&lt;/field&gt;&lt;/record&gt;&lt;record&gt;&lt;field name=&quot;COLUMN2&quot; type=&quot;java.lang.String&quot;&gt;row2&lt;/field&gt;&lt;field name=&quot;COLUMN1&quot; type=&quot;java.math.BigDecimal&quot;&gt;2&lt;/field&gt;&lt;/record&gt;&lt;/table&gt;" doc:name="sample xml"/>
+        <data-mapper:transform config-ref="xml_to_xml" doc:name="XML To XML"/>
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <logger message="Payload is: #[payload]" level="INFO" doc:name="Logs Transformed Payload"/>
+    </flow>
+</mule>
