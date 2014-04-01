@@ -50,14 +50,14 @@ Building the demo
 This demo will be incrementally creating a "XA transaction" support type of application.Element property-placeholder
 allows spring property placeholders to be configured directly in the Mule configuration file.
 
-# Step 1: Building the "xajmsdbtaskFlow-addpayloadto-jms" flow
+### Step 1: Building the "xajmsdbtaskFlow-addpayloadto-jms" flow
 
 1. HTTP Inbound Endpoint to invoke the flow.  
 2. Add set-payload Element that sets the paylaod with the provided value next to http inbound.
 3. Filter the Palette by "JMS" component with queue name "testDataQueue" and add next to the set-payload Element.  
 
 
-# Step 2: Building the "xajmsdbtaskFlow-XA-jmsto-db" flow  
+### Step 2: Building the "xajmsdbtaskFlow-XA-jmsto-db" flow  
 
 1. Define JMS inbound which support XA transaction.
 2. Use data mapper to transform the payload to list of map objects.
@@ -65,7 +65,7 @@ allows spring property placeholders to be configured directly in the Mule config
 
 
 
-# Step 3: Testing of XA transaction can observed by playing with jdbc outbound-endpoint with valid /invalid query key value with respective transaction levels.
+### Step 3: Testing of XA transaction can observed by playing with jdbc outbound-endpoint with valid /invalid query key value with respective transaction levels.
 
 
 
