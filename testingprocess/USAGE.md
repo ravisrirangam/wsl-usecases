@@ -1,16 +1,14 @@
 #Testing approach for mule projects
 
 [Purpose](#purpose)
+
 [Prerequisites](#prerequisites)
 
 Purpose
 =======
-	Using the framework Munit can achieve the different testing phases on mule projects.
-	Using munit can achieve the mocking endpoints,mocking connectors and mocking message processors
-	Using munit can do the unit testing by following the approach code little and test little. Munit inbuilt supports assert conditions to validate the 
-	response.
-	Using munit can also achieve integration testing and its supports maintaining  test results using the surefire plugin.
-	Munit framework supports executing the test classes using the maven commands.
+	Integration Solutions form the backbone of many modern enterprises, linking vital systems and business processes and any defect in the integration layer is likely to cause huge loss and affect many areas of the enterprise. 
+	It is no wonder that majority of the integration solutions are done with minimal or no testing at all and integration flows developed using Mule are no exception. 
+	The process, standards and guidelines defined in this section and the sub sections provision the means to perform Mocking, Unit Testing, Test Suite Creation, Integration Testing of Mule projects using MUnit
 	
 Prerequisites
 ==============
