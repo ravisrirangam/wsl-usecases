@@ -4,6 +4,8 @@
 
 [Prerequisites](#prerequisites)
 
+[References](#references)
+
 Purpose
 =======
 	Integration Solutions form the backbone of many modern enterprises, linking vital systems and business processes and any defect in the integration layer is likely to cause huge loss and affect many areas of the enterprise. 
@@ -15,5 +17,9 @@ Prerequisites
 	To achieve munit based testing ,munit artefacts should be available in your local maven repository.
 	First install mule-intercptor module and next install mule-munit core jars.
 	For Munit Set up can refer to the link :https://github.com/mulesoft/munit
+	
+References
+===========
+	https://github.com/mulesoft/munit/wiki#studio-demos
 
 	
