@@ -18,14 +18,27 @@ Prerequisites
 
 In order to build and run this project you'll need:  
 
-* FTP Server
+* Local FTP Server. This can be achieved through FileZilla Server.
+  Need to create a user and target ftp Directory.
+  The same ftp credential needs to be added to FTP end point in mule project.
 
-Initial setup of the Mule project
+Initial set up of the Mule project
 =================================
 
-### Step 1: 
-As you can see the payload of each operations is printed to the console.
+### Step 1: Quartz Connector Configuration
 
-Resources
-=========
+1. Create Quartz global connector.
+2. In the advanced tab add factory properties 'org.quartz.threadPool.threadCount' and set to 1.
+   This ensures at any time only single quartz thread is active.
+
+### Step 2: FTP Connector Configuration
+
+1. Create FTP global connector.
+2. In the connector add receiver threading profiler and set maxThreadsActive="1".
+3. In service-overrides change  messageReceiver, messageFactory to custom java classes.
+4. These classes are available at folder org.mule.transport.ftp.MyCustomFTPMessageReceive,    org.mule.transport.ftp.MyMessageFactory respectively.
+5. The purpose of 'MyCustomFTPMessageReceive' is it overrides the poll method of FTPMessageReceiver and facilitates picking all the files one time available in ftp target directory instead of picking them one by one. This method returns a List of byte array where each byte array is the file payload instead of returning a FTPFile as done by the conventional FTPMessageReceiver.
+6.On the other hand 'MyMessageFactory' allows to create mule message of type List where the traditional MessageFactory supports only type 'FTPFile'.
+
+
 
