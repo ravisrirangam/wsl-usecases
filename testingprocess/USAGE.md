@@ -1,4 +1,4 @@
-#Testing approach for JMS bases Mule Project
+#Testing approach for JMS based Mule Project
 
 [Purpose](#purpose)
 
