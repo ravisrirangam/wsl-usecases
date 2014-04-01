@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:quartz="http://www.mulesoft.org/schema/mule/quartz" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd
+http://www.mulesoft.org/schema/mule/quartz http://www.mulesoft.org/schema/mule/quartz/current/mule-quartz.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+    <ftp:connector name="FTPConnectionRef"  validateConnections="false" doc:name="FTP" pollingFrequency="60000">
+    <dispatcher-threading-profile maxThreadsActive="1" maxBufferSize="10" maxThreadsIdle="1" threadTTL="600000" poolExhaustedAction="WAIT" threadWaitTimeout="10000"/>   
+    <service-overrides  messageReceiver="org.mule.transport.ftp.MyCustomFTPMessageReceiver" messageFactory="org.mule.transport.ftp.MyMessageFactory"/>
+    </ftp:connector>
+    <quartz:connector name="QuartzConnRef" validateConnections="true" doc:name="Quartz">
+        <quartz:factory-property key="org.quartz.threadPool.threadCount" value="1"/>
+   <!--  <receiver-threading-profile maxThreadsActive="1"/> -->
+     </quartz:connector>
+    <flow name="FTP_QuartzFlow2" doc:name="FTP_QuartzFlow2">
+        <quartz:inbound-endpoint jobName="FtpStopper" repeatInterval="10000" repeatCount="0" startDelay="1" responseTimeout="10000" connector-ref="QuartzConnRef" doc:name="StopFTP">
+            <quartz:event-generator-job>
+                <quartz:payload>Invoke!!!</quartz:payload>
+            </quartz:event-generator-job>
+        </quartz:inbound-endpoint>
+        <scripting:component doc:name="Groovy">
+            <scripting:script engine="Groovy"><![CDATA[def theFTPConnector = registry.'FTPConnectionRef'
+                    if (theFTPConnector.isStarted()) {
+                        theFTPConnector.stop();
+                    }]]></scripting:script>
+        </scripting:component>
+    </flow>
+  <flow name="FTP_QuartzFlow1" doc:name="FTP_QuartzFlow1">
+        <quartz:inbound-endpoint jobName="FTPTrigger"  repeatInterval="0"   responseTimeout="10000" connector-ref="QuartzConnRef" doc:name="Trigger" cronExpression="0 0/1 * * * ?">
+            <quartz:event-generator-job>
+                <quartz:payload>Triggered!</quartz:payload>
+            </quartz:event-generator-job>
+        </quartz:inbound-endpoint>
+        <logger message="&quot;FTP trigger strated&quot;" level="INFO" doc:name="Logger"/>
+        <scripting:component doc:name="Groovy">
+            <scripting:script engine="Groovy"><![CDATA[
+def theFTPConnector = registry.'FTPConnectionRef'
+                    if (!theFTPConnector.isStarted()) {
+                        theFTPConnector.start();
+                    }
+                     println "Waiting for 3s";
+                    java.lang.Thread.sleep(3000);]]></scripting:script>
+        </scripting:component>
+        <scripting:component doc:name="Groovy">
+            <scripting:script engine="Groovy"><![CDATA[def theFTPConnector = registry.'FTPConnectionRef'
+                    if (theFTPConnector.isStarted()) {
+                        //theFTPConnector.stop();
+                    }]]></scripting:script>
+        </scripting:component>
+        <logger message="&quot;Stopped ftp file polling&quot;" level="INFO" doc:name="Logger"/>
+    </flow>
+    <flow name="FTPFlow2" doc:name="FTPFlow2"   processingStrategy="synchronous">
+        <ftp:inbound-endpoint  connector-ref="FTPConnectionRef"  doc:name="FTP" responseTimeout="10000" host="localhost" password="1234" port="21" user="Indira" />
+        <logger message="&quot;Response from FTP:&quot;" level="INFO" doc:name="Logger"/>
+        <collection-splitter doc:name="Collection Splitter"/>
+        <logger message="&quot;payload after a splitter:&quot; + #[message.payload]" level="INFO" doc:name="Logger"/>
+
+       <!--  <custom-transformer class="org.mule.transport.ftp.convertByteArrayToString" doc:name="Java"/> -->
+        <byte-array-to-string-transformer doc:name="Byte Array to String"/>
+        <append-string-transformer message=" hi" doc:name="Append String"/>
+        <file:outbound-endpoint path="C:\Users\Whiteskylabs\Desktop\Files\Output" responseTimeout="10000" doc:name="File" />
+
+     
+        
+    </flow>
+</mule>
