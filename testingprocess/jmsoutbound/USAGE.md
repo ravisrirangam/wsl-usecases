@@ -1,25 +1,36 @@
-#Testing approach for mule projects
+#Testing approach for JMS based Mule Project
 
 [Purpose](#purpose)
 
-[Prerequisites](#prerequisites)
+[Mflow file](#mflow-file)
 
-[References](#references)
+[Unit Testing and Mocking](#unit-testing-and-mocking)
+
+[Test Mule Project](#test-mule-project)
 
 Purpose
 =======
-	Integration Solutions form the backbone of many modern enterprises, linking vital systems and business processes and any defect in the integration layer is likely to cause huge loss and affect many areas of the enterprise. 
-	It is no wonder that majority of the integration solutions are done with minimal or no testing at all and integration flows developed using Mule are no exception. 
-	The process, standards and guidelines defined in this section and the sub sections provision the means to perform Mocking, Unit Testing, Test Suite Creation, Integration Testing of Mule projects using MUnit
-	
-Prerequisites
-==============
-	To achieve munit based testing ,munit artefacts should be available in your local maven repository.
-	First install mule-intercptor module and next install mule-munit core jars.
-	For Munit Set up can refer to the link :https://github.com/mulesoft/munit
-	
-References
-===========
-	https://github.com/mulesoft/munit/wiki#studio-demos
 
+	* The purpose of this document gives an overview on mocking and unit testing the mule project when it contains the JMS as outbound endpoint.
+	
+Mflow file
+===========
+	* Consider the mflow which contains the http inbound,append string message processor,jms outbound endpoint and object to string message processor.
+
+Unit Testing and Mocking using Junit Test Case
+================================================
+	* Create a Junit Test case under src/main/java folder and name of the test class should end with Test.
+	* Import the munit related packages into test class.
+	* configure the getresourceconfiguration method by pointing to configuration file.
+	* Create test method which is used to invoke the flow.Pass the flow name as input parameter
+	* Create test methods which covers the possitve,negative and null payload use case.
+	* To mock the JMS outbound can use the below syntax.
+		whenEndpointWithAddress("jms://<QueueName>").thenReturn(mulemessageWithPayload("<pass the data here>"));
+		
+Test Mule Project
+==================
+	* Right click on the Junit Test case and run as Junit Test case.
+	* Open the Junit console and see the test results.
+
+For more understanding can refer the attached jmsoutbound sample code.
 	
