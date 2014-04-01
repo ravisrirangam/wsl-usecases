@@ -1,7 +1,7 @@
 [Purpose](#purpose)  
 [Prerequisites](#prerequisites)  
 [Initial set up of the Mule project](#initial-set up-of-the-mule-project)
-[Running the Mule project] (#Running-the-mule-project)
+[Running the Mule project](#Running-the-mule-project)
 
 Purpose
 =======
