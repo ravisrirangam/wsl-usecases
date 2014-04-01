@@ -17,7 +17,7 @@ Purpose
 Prerequisites
 ==============
 	To achieve munit based testing ,munit artefacts should be available in your local maven repository.
-	First install mule-intercptor module and next install mule-munit core jars.
+	First install mule-interceptor module and next install mule-munit core jars.
 	For Munit Set up can refer to the link :https://github.com/mulesoft/munit
 	
 Naming Convention 
