@@ -28,19 +28,19 @@ To begin building this application, start Mule Studio and
 
 ### Step 1: Configuring the mule inbuilt in-memory activemQ connection factory.
 
-1. Define the global activemq-xa-connector  with connectionfactory reference to XA supported spring reference bean with class ActiveMQXAConnectionFactory.
-2. Also define activemQ brooker through spring bean which refers to activemQ policies map.  
-3. Configure DLQ strategy support.   
+1. Define the global activemq-xa-connector  with connectionfactory reference to XA supported spring reference bean with class ActiveMQXAConnectionFactory.
+2. Also define activemQ brooker through spring bean which refers to activemQ policies map.  
+3. Configure DLQ strategy support.   
 
 ### Step 2: Configuring the mule jdbc connector
 
-1. Define the global jdbc-ee connector  with data-source reference to XA supported spring reference poolXA data source bean with class PoolXADataSourceImpl.
-2. Also define activemQ brooker through spring bean which refers to activemQ policies map.  
-3. Configure DLQ strategy policy.
+1. Define the global jdbc-ee connector  with data-source reference to XA supported spring reference poolXA data source bean with class PoolXADataSourceImpl.
+2. Also define activemQ brooker through spring bean which refers to activemQ policies map.  
+3. Configure DLQ strategy policy.
 
 ### Step 3: Configuring global jbossts transaction-manager
 
-1. Define the global jbossts transaction-manager to XA transactions.
+1. Define the global jbossts transaction-manager to XA transactions.
 
 
 
@@ -59,7 +59,7 @@ allows spring property placeholders to be configured directly in the Mule config
 
 ### Step 2: Building the "xajmsdbtaskFlow-XA-jmsto-db" flow  
 
-1. Define JMS inbound which support XA transaction.
+1. Define JMS inbound which support XA transaction.
 2. Use data mapper to transform the payload to list of map objects.
 3. Add DB component to the outbound endpoint which uses the transform message inserted into respective database table.
 
