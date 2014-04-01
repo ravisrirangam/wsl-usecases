@@ -1,4 +1,4 @@
-#Testing approach on mule projects
+#Testing approach for mule projects
 
 	* Using the framework Munit can achieve the different testing phases on mule projects.
 	* Using munit can achieve the mocking endpoints,mocking connectors and mocking message processors
