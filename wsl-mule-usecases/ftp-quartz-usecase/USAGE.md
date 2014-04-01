@@ -1,13 +1,15 @@
 [Purpose](#purpose)  
-[Prerequisites](#prerequisites)  
+
+[Prerequisites](#prerequisites) 
+
 [Initial set up of the Mule project](#initial-set up-of-the-mule-project)
 
-
+[Running Mule project](#running-mule-project)
 
 Purpose
 =======
 
-This document features how to configure ftp connector, override the poll method to pick all the files available in the ftp target directory.
+This document features how to configure ftp connector, override the poll method of FTPMessageReceiver to pick all the files available in the ftp target directory.
 
 Prerequisites
 =============
@@ -37,7 +39,7 @@ Initial set up of the Mule project
 6.On the other hand 'MyMessageFactory' allows to create mule message of type List where the traditional MessageFactory supports only type 'FTPFile'.
 7. Groovy scripts are used to disable polling through FTP inbound and to poll through Quartz trigger only.
 
-Running the Mule project
+Running Mule project
 =================================
 1. When the application is started, the Quartz endpoint with name 'StopFTP' stops the connector. This helps in avoiding any processing or picking of the file during application start up.
 2. The second Quartz end point 'Trigger' actually triggers the flow. Its frequency is set to 1 minute. It starts the ftp connector and after 3s stops the connector.
