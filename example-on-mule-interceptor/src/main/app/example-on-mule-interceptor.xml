@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns="http://www.mulesoft.org/schema/mule/core" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
+    xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd" version="EE-3.4.1">
+
+    <flow name="interceptorFlow" doc:name="interceptorFlow">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="muleInterceptor" doc:name="HTTP"/>
+        <expression-filter expression="#[payload !='favicon.ico']" doc:name="Expression to stop 'favicon.ico' pass thru the flow"/>
+
+        <custom-interceptor class="com.wsl.MyCustomInterceptor"/>
+        <timer-interceptor></timer-interceptor>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <logger level="INFO" doc:name="Logger" message="#[flow.name], #[payload]"/>
+    </flow>
+</mule>
