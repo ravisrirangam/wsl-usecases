@@ -14,7 +14,7 @@ Running the application
 =======================
 
 1. Right click on MuleContextNotificationExample.mflow and select **Run As Mule Application**.
-2. Check the console to see ouuput when the application starts.
+2. Check the console to see output when the application starts.
 
 	++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	+ Started app 'example-mule-context-notification'          +
