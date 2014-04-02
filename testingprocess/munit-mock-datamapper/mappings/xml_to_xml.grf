@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><Graph author="rafiqoffice" created="Mon Mar 24 11:20:41 IST 2014" description="XML To XML" guiVersion="3.4.3.P" id="1395661509780" licenseCode="Unlicensed" licenseType="Unknown" modified="Mon Mar 24 11:20:41 IST 2014" modifiedBy="rafiqoffice" name="XML_To_XML" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table/record/field" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="34d3c9fc-e1da-4907-9cf5-c3fc4d56ba7f" _parent_id="__parent_id" _type="Input" id="a2ba877b-0267-44b4-a88b-5817824fcc57">
+<Record fieldDelimiter="," name="field" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/table/record/field/@name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="1" __sourcePath="{}/table/record/field/@type" containerType="SINGLE" label="type" name="type" type="string"/>
+<Field __index="2" __sourcePath="{}/table/record/field/@text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table/record/field" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="d100a047-d9cb-4d80-bd10-a6a8a7536a3b" _parent_id="__parent_id" _type="Output" id="881d809d-2b22-44e3-a62c-55379a588ad1">
+<Record fieldDelimiter="," name="field" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/table/record/field/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="1" __sourcePath="{}/table/record/field/type" containerType="SINGLE" label="type" name="type" type="string"/>
+<Field __index="2" __sourcePath="{}/table/record/field/text()" containerType="SINGLE" label="text()" name="text" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table/record" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="0eb1e673-7dae-4c5d-a903-b8db65c8c5e6" _parent_id="__parent_id" _type="Input" id="34d3c9fc-e1da-4907-9cf5-c3fc4d56ba7f">
+<Record fieldDelimiter="," name="record" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table/record" _dataStructure="SINGLE_DIMENSIONAL_COLLECTION" _id="__id" _metadataParentId="8ea2e367-2eb5-4bd5-8de3-543eacec39ca" _parent_id="__parent_id" _type="Output" id="d100a047-d9cb-4d80-bd10-a6a8a7536a3b">
+<Record fieldDelimiter="," name="record" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_parent_id" __systemManaged="true" name="__parent_id" type="string"/>
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table" _dataStructure="OBJECT" _id="__id" _type="Input" id="0eb1e673-7dae-4c5d-a903-b8db65c8c5e6">
+<Record fieldDelimiter="," name="table" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/table" _dataStructure="OBJECT" _id="__id" _type="Output" id="8ea2e367-2eb5-4bd5-8de3-543eacec39ca">
+<Record fieldDelimiter="," name="table" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node cacheInMemory="true" charset="UTF-8" enabled="enabled" fileURL="dict:outputPayload" guiName="XML WRITER" guiX="900" guiY="20" id="EXT_XML_WRITER0" type="EXT_XML_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<table xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <record clover:inPort="1" clover:key="__parent_id" clover:parentKey="__id">
+    <field clover:inPort="2" clover:key="__parent_id" clover:parentKey="__id">
+      <name>$2.name</name>
+      <type>$2.type</type>$2.text
+    </field>
+  </record>
+</table>]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'field' -&gt; 'field'" guiX="460" guiY="220" id="FOREACH_FIELD_FIELD" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+output.name = input.name;
+output.type = input.type;
+output.text = input.text;
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'record' -&gt; 'record'" guiX="460" guiY="120" id="FOREACH_RECORD_RECORD" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+output.__parent_id = input.__parent_id;
+//END -> DO NOT REMOVE
+]]></attr>
+</Node>
+<Node enabled="enabled" guiName="Foreach 'table' -&gt; 'table'" guiX="460" guiY="20" id="FOREACH_TABLE_TABLE" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="XML READER" guiX="20" guiY="20" id="XML_READER0" type="XML_READER">
+<attr name="xmlSchemaURL"><![CDATA[.\src\test\resources\table.xsd]]></attr>
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath="/table">
+  <Context generatedKey="__parent_id" outPort="1" parentKey="__id" sequenceField="__id" xpath="record">
+    <Context generatedKey="__parent_id" outPort="2" parentKey="__id" sequenceField="__id" xpath="field">
+      <Mapping cloverField="name" trim="true" xpath="@name"/>
+      <Mapping cloverField="type" trim="true" xpath="@type"/>
+      <Mapping cloverField="text" trim="true" xpath="text()"/>
+    </Context>
+  </Context>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+<attr name="__rootGlobalElementName"><![CDATA[table]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="FOREACH_FIELD_FIELD:0" guiBendpoints="" id="Edge5" inPort="Port 2 (in)" metadata="881d809d-2b22-44e3-a62c-55379a588ad1" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:2"/>
+<Edge debugMode="true" fromNode="FOREACH_RECORD_RECORD:0" guiBendpoints="" id="Edge3" inPort="Port 1 (in)" metadata="d100a047-d9cb-4d80-bd10-a6a8a7536a3b" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:1"/>
+<Edge debugMode="true" fromNode="FOREACH_TABLE_TABLE:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="8ea2e367-2eb5-4bd5-8de3-543eacec39ca" outPort="Port 0 (out)" toNode="EXT_XML_WRITER0:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="0eb1e673-7dae-4c5d-a903-b8db65c8c5e6" outPort="Port 0 (out)" toNode="FOREACH_TABLE_TABLE:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:1" guiBendpoints="" id="Edge2" inPort="Port 0 (in)" metadata="34d3c9fc-e1da-4907-9cf5-c3fc4d56ba7f" outPort="Port 1 (out)" toNode="FOREACH_RECORD_RECORD:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:2" guiBendpoints="" id="Edge4" inPort="Port 0 (in)" metadata="a2ba877b-0267-44b4-a88b-5817824fcc57" outPort="Port 2 (out)" toNode="FOREACH_FIELD_FIELD:0"/>
+</Phase>
+</Graph>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper" 
+xmlns:json="http://www.mulesoft.org/schema/mule/json" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+ xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" 
+ xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/json http://www.mulesoft.org/schema/mule/json/current/mule-json.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd">
+
+
+	    <spring:beans>
+        <spring:bean id="connectionFactory" name="connectionFactory" class="org.hornetq.jms.client.HornetQConnectionFactory">
+            <spring:constructor-arg>
+                <spring:bean class="org.hornetq.api.core.TransportConfiguration" scope="global session">
+                    <spring:constructor-arg value="org.hornetq.integration.transports.netty.NettyConnectorFactory"/>
+                    <spring:constructor-arg>
+                        <spring:map value-type="java.lang.Object" key-type="java.lang.String">
+                            <spring:entry key="host" value="localhost"/>
+                            <spring:entry key="port" value="5445"/>
+                        </spring:map>
+                    </spring:constructor-arg>
+                </spring:bean>
+            </spring:constructor-arg>
+        </spring:bean>
+    </spring:beans>  
+    
+     <jms:connector name="jmsConnector" connectionFactory-ref="connectionFactory" specification="1.1" doc:name="JMS" maxRedelivery="3" validateConnections="true">
+     </jms:connector>
+    	
+    	
+    <flow name="munitjmssampleFlow" doc:name="munitjmssampleFlow">
+    	<http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP"/>
+    	<set-payload value="Hornet Queue Test" doc:name="Set Payload"/>        
+         <logger message="$$$$$$$$$$$$$$ before JMS #[payload.getClass()] $$$$$$$$$$$$$$$$$4" level="INFO" doc:name="Logger"/>        
+        <jms:outbound-endpoint   exchange-pattern="request-response" doc:name="JMS" connector-ref="jmsConnector" queue="ExampleQueue"/>
+        
+        <logger message="$$$$$$$$$$$$$$ before JMS #[payload.getClass()] $$$$$$$$$$$$$$$$$4" level="INFO" doc:name="Logger"/>
+        <json:json-to-object-transformer doc:name="JSON to Object"/>
+                
+        <!-- <append-string-transformer message="after jms" doc:name="Append String"/> -->
+                
+        <logger message="$$$$$$$$$$$$$$ after JMS  and payload is #[payload.getClass()] $$$$$$$$$$$$$$$$$" level="INFO" doc:name="Logger"/>
+    </flow>
+
+
+
+
+
+
+
+
+
+
+
+
+</mule>
