@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Graph author="pradeep" created="Tue Apr 01 12:17:05 IST 2014" description="XML To Map" guiVersion="3.4.3.P" id="1396335535957" licenseCode="Unlicensed" licenseType="Unknown" modified="Tue Apr 01 12:17:05 IST 2014" modifiedBy="pradeep" name="XML_To_Map" preview-file="D:/mho/fileaccess/dbdata/bck/userdata1.xml" revision="1.0" showComponentDetails="false">
+<Global>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/user" _dataStructure="OBJECT" _id="__id" _type="Input" id="589ee2fe-f078-4693-9ff2-7e997d9e9a00">
+<Record fieldDelimiter="," name="user" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="0" __sourcePath="{}/user/id" containerType="SINGLE" label="id" name="id" type="integer"/>
+<Field __index="1" __sourcePath="{}/user/name" containerType="SINGLE" label="name" name="name" type="string"/>
+<Field __index="2" __sourcePath="{}/user/age" containerType="SINGLE" label="age" name="age" type="integer"/>
+<Field __index="3" __sourcePath="{}/user/empid" containerType="SINGLE" label="empid" name="empid" type="string"/>
+</Record>
+</Metadata>
+<Metadata __index="0" __referenceCounter="1" __sourcePath="{}/user" _dataStructure="OBJECT" _id="__id" _type="Output" id="3955a306-442e-4c03-a691-d7445efe4b18">
+<Record fieldDelimiter="," name="user" recordDelimiter="\n\\|\r\n\\|\r" type="delimited">
+<Field __artificialType="_id" __systemManaged="true" name="__id" type="string"/>
+<Field __index="2" __sourcePath="{}/user/age" containerType="SINGLE" label="age" name="age" type="integer"/>
+<Field __index="3" __sourcePath="{}/user/empid" containerType="SINGLE" label="empid" name="empid" type="string"/>
+<Field __index="0" __sourcePath="{}/user/id" containerType="SINGLE" label="id" name="id" type="integer"/>
+<Field __index="1" __sourcePath="{}/user/name" containerType="SINGLE" label="name" name="name" type="string"/>
+</Record>
+</Metadata>
+<Dictionary>
+<Entry id="DictionaryEntry0" input="true" name="inputPayload" output="false" type="object"/>
+<Entry id="DictionaryEntry1" input="false" name="outputPayload" output="true" type="object"/>
+</Dictionary>
+</Global>
+<Phase number="0">
+<Node enabled="enabled" guiName="Foreach 'user' -&gt; 'user'" guiX="460" guiY="20" id="FOREACH_USER_USER" transformClass="com.mulesoft.datamapper.transform.MelRecordTransform" type="REFORMAT">
+<attr name="melScript"><![CDATA[//MEL
+//START -> DO NOT REMOVE
+output.__id = input.__id;
+//END -> DO NOT REMOVE
+output.id = input.id;
+output.name = input.name;
+output.age = input.age;
+output.empid = input.empid;
+]]></attr>
+</Node>
+<Node cacheInMemory="true" enabled="enabled" fileURL="dict:outputPayload" guiName="Map&lt;k,v&gt; WRITER" guiX="900" guiY="20" id="MAP_WRITER0" type="MAP_WRITER">
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<user xmlns:clover="http://www.cloveretl.com/ns/xmlmapping" clover:inPort="0">
+  <id>$0.id</id>
+  <name>$0.name</name>
+  <age>$0.age</age>
+  <empid>$0.empid</empid>
+</user>]]></attr>
+<attr name="_data_format"><![CDATA[MAP]]></attr>
+</Node>
+<Node charset="UTF-8" enabled="enabled" fileURL="dict:inputPayload" guiName="XML READER" guiX="20" guiY="20" id="XML_READER0" type="XML_READER">
+<attr name="xmlSchemaURL"><![CDATA[.\src\test\resources\user.xsd]]></attr>
+<attr name="mapping"><![CDATA[<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Context outPort="0" sequenceField="__id" xpath="/user">
+  <Mapping cloverField="id" trim="true" xpath="id"/>
+  <Mapping cloverField="name" trim="true" xpath="name"/>
+  <Mapping cloverField="age" trim="true" xpath="age"/>
+  <Mapping cloverField="empid" trim="true" xpath="empid"/>
+</Context>
+]]></attr>
+<attr name="_data_format"><![CDATA[XML]]></attr>
+<attr name="__rootGlobalElementName"><![CDATA[user]]></attr>
+</Node>
+<Edge debugMode="true" fromNode="FOREACH_USER_USER:0" guiBendpoints="" id="Edge1" inPort="Port 0 (in)" metadata="3955a306-442e-4c03-a691-d7445efe4b18" outPort="Port 0 (out)" toNode="MAP_WRITER0:0"/>
+<Edge debugMode="true" fromNode="XML_READER0:0" guiBendpoints="" id="Edge0" inPort="Port 0 (in)" metadata="589ee2fe-f078-4693-9ff2-7e997d9e9a00" outPort="Port 0 (out)" toNode="FOREACH_USER_USER:0"/>
+</Phase>
+</Graph>
