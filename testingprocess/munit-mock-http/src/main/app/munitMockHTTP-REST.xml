@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jersey="http://www.mulesoft.org/schema/mule/jersey"
+	xmlns:cxf="http://www.mulesoft.org/schema/mule/cxf" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/cxf http://www.mulesoft.org/schema/mule/cxf/current/mule-cxf.xsd
+http://www.mulesoft.org/schema/mule/jersey http://www.mulesoft.org/schema/mule/jersey/current/mule-jersey.xsd">
+	
+	<flow name="munit-http-RestConsumer" doc:name="munit-http-RestConsumer">
+		<http:inbound-endpoint exchange-pattern="request-response"
+			host="localhost" port="8081" doc:name="HTTP Inbound REST JSON" path="triggerRestServerJSON" />
+		<logger message="triggered #[flow.name]" level="INFO"
+			doc:name="Logger indicates start of flow" />
+		<http:outbound-endpoint exchange-pattern="request-response"
+			method="POST"
+			address="http://localhost:8686/ActualRestServer/RestServerClass?param1=#[message.inboundProperties['param1']]"
+			doc:name="HTTP Outbound (Needs to Mock)" mimeType="application/json" />
+	</flow>
+	
+	<flow name="munit-http-Rest-XML-Consumer" doc:name="munit-http-Rest-XML-Consumer"
+		processingStrategy="synchronous">
+		<http:inbound-endpoint exchange-pattern="request-response"
+			host="localhost" port="8081" doc:name="HTTP Inbound Rest XML"
+			path="triggerRestServerXML" mimeType="text/xml" />
+		<logger message="triggered #[flow.name]" level="INFO"
+			doc:name="Logger indicates start of flow" />
+		<http:outbound-endpoint exchange-pattern="request-response"
+			method="GET"
+			address="http://localhost:8686/ActualRestServer/RestServerClass?param1=#[message.inboundProperties['param1']]"
+			doc:name="HTTP Outbound XML (Needs to Mock)" mimeType="text/xml" />
+	</flow>
+	
+	
+	<flow name="RestServer" doc:name="RestServer" processingStrategy="synchronous">
+		<http:inbound-endpoint exchange-pattern="request-response"
+			host="localhost" port="8686" path="ActualRestServer" doc:name="HTTP Endpoint "
+			 />
+		<expression-filter expression="#[payload !='favicon.ico']"
+			doc:name="not allowing 'favicon.ico'" />
+		<logger message="triggered #[flow.name]" level="INFO"
+			doc:name="Log indicates start of flow" />
+		<jersey:resources doc:name="REST">
+			<component class="com.wsl.util.RestServerClass" />
+		</jersey:resources>
+	</flow>
+	<!-- <flow name="munitMockHTTPFlow1" doc:name="munitMockHTTPFlow1"> <http:inbound-endpoint 
+		exchange-pattern="request-response" host="localhost" port="8081" doc:name="HTTP"/> 
+		<logger message="triggered #[flow.name]" level="INFO" doc:name="Log indicates 
+		start of flow"/> <jersey:resources doc:name="REST"/> </flow> -->
+</mule>

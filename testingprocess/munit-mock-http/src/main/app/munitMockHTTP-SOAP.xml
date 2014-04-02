@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns="http://www.mulesoft.org/schema/mule/core" version="EE-3.4.1"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+    <flow name="munit-http-SoapConsumer" doc:name="munit-http-SoapConsumer">
+		<http:inbound-endpoint exchange-pattern="request-response"
+			host="localhost" port="8081" doc:name="HTTP Inbound SOAP" path="triggerSoapServer" />
+		<logger message="triggered #[flow.name]" level="INFO"
+			doc:name="Logger indicates start of flow" />
+		<http:outbound-endpoint exchange-pattern="request-response"
+			method="GET"
+			address="http://localhost:8082/flightInformation"
+			doc:name="HTTP Outbound (Needs to Mock)" mimeType="text/xml" />
+	</flow>
+
+</mule>
