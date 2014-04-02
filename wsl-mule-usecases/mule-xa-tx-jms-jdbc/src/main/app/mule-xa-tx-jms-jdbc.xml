@@ -1,0 +1,148 @@
+<?xml  version="1.0"  encoding="UTF-8"  ?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:jbossts="http://www.mulesoft.org/schema/mule/jbossts"
+	xmlns:data-mapper="http://www.mulesoft.org/schema/mule/ee/data-mapper"
+	xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking"
+	xmlns:jdbc-ee="http://www.mulesoft.org/schema/mule/ee/jdbc" xmlns:core="http://www.mulesoft.org/schema/mule/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:jdbc="http://www.mulesoft.org/schema/mule/jdbc"
+	xmlns:spring="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jms="http://www.mulesoft.org/schema/mule/jms"
+	xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/3.3/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/jdbc http://www.mulesoft.org/schema/mule/ee/jdbc/current/mule-jdbc-ee.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/3.3/mule-jms.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.3/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/3.3/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/3.3/mule-http.xsd
+http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+http://www.mulesoft.org/schema/mule/ws http://www.mulesoft.org/schema/mule/ws/3.3/mule-ws.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/ee/data-mapper http://www.mulesoft.org/schema/mule/ee/data-mapper/current/mule-data-mapper.xsd
+http://www.mulesoft.org/schema/mule/jbossts http://www.mulesoft.org/schema/mule/jbossts/current/mule-jbossts.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+	version="EE-3.4.1">
+
+
+<!-- defineing XA transaction manager  -->
+<jbossts:transaction-manager doc:name="Transaction Manager">
+    <property key="com.arjuna.ats.arjuna.coordinator.defaultTimeout" value="47" /><!-- this is in seconds -->
+    <property key="com.arjuna.ats.arjuna.coordinator.txReaperTimeout" value="108000"/><!-- this is in milliseconds -->
+</jbossts:transaction-manager>
+
+
+<context:property-placeholder location="classpath:jdbc.properties" />
+
+<spring:beans>
+    <spring:bean id="AmqDeadLetterStrategy"
+                 class="org.apache.activemq.broker.region.policy.IndividualDeadLetterStrategy"
+                 p:queuePrefix="DLQ."
+                 p:useQueueForQueueMessages="true" 
+                 p:processNonPersistent="true"                        
+                  />
+                 
+    <spring:bean id="AmqDefaultPolicyEntry"
+                 class="org.apache.activemq.broker.region.policy.PolicyEntry"
+                 p:queue="*"
+                 p:deadLetterStrategy-ref="AmqDeadLetterStrategy" />
+                 
+    <spring:bean id="AmqPolicyMap"
+                 class="org.apache.activemq.broker.region.policy.PolicyMap"
+                 p:defaultEntry-ref="AmqDefaultPolicyEntry" />
+    
+    <spring:bean name="AmqBroker"
+                 class="org.apache.activemq.broker.BrokerService"
+                 p:brokerName="esb-amq-broker-xa"
+                 p:persistent="true"
+                 p:dataDirectory="activemq.data.dir"
+                 p:useJmx="true"
+                 p:useShutdownHook="false"
+                 p:destinationPolicy-ref="AmqPolicyMap"
+                 init-method="start"
+                 destroy-method="stop" />
+                 
+    <spring:bean name="AmqRedeliveryPolicy"
+                 class="org.apache.activemq.RedeliveryPolicy"
+                 p:useExponentialBackOff="true" 
+                
+                 />
+  <!--    p:maximumRedeliveries="10" -->
+    
+    <!-- org.apache.activemq.ActiveMQXAConnectionFactory// org.apache.activemq.spring.ActiveMQConnectionFactory-->
+    <spring:bean name="AmqConnectionFactory"
+                 class="org.apache.activemq.ActiveMQXAConnectionFactory"
+                 p:brokerURL="vm://esb-amq-broker-xa"
+                 p:redeliveryPolicy-ref="AmqRedeliveryPolicy"
+                 depends-on="AmqBroker" />
+  </spring:beans>
+ 
+<!--   <jms:activemq-connector name="EsbJmsConnector"
+                          specification="1.1"
+                          connectionFactory-ref="AmqConnectionFactory"
+                          disableTemporaryReplyToDestinations="true"
+                          persistentDelivery="true" doc:name="Active MQ"/> -->
+                          
+ <!-- XA Support ActiveMQ connector -->                         
+  <jms:activemq-xa-connector name="jmsXAConnector"
+                             connectionFactory-ref="AmqConnectionFactory"
+                             disableTemporaryReplyToDestinations="true"
+                             maxRedelivery="10"
+                         	 persistentDelivery="true" doc:name="INMemoeryActive MQ "/>                        
+                          
+                          
+                          
+ <!--  XA support orcale db datasource configuration -->                         
+                          
+    <spring:beans>
+	<spring:bean id="oraDataSource" class="oracle.ucp.jdbc.PoolXADataSourceImpl">
+		<spring:property name="URL" value="${jdbc.url}" />
+		<spring:property name="user" value="${jdbc.user}" />
+		<spring:property name="password" value="${jdbc.pass}" />
+		<spring:property name="connectionFactoryClassName"
+			value="oracle.jdbc.xa.client.OracleXADataSource" />
+		<spring:property name="minPoolSize" value="1" />
+		<spring:property name="maxPoolSize" value="200" />
+		<spring:property name="connectionWaitTimeout" value="300" />
+	</spring:bean>
+
+</spring:beans>
+ 
+<jdbc-ee:connector name="jdbcConnectorSource-xa"
+		dataSource-ref="oraDataSource" doc:name="Database">
+	</jdbc-ee:connector>
+
+    <data-mapper:config name="xml_to_map" transformationGraphPath="xml_to_map.grf" doc:name="xml_to_map"/>                       
+                          
+                          
+    <flow name="xajmsdbtaskFlow1" doc:name="xajmsdbtaskFlow1">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8081" path="tojms" doc:name="HTTP"/>
+        <set-payload value="&lt;user&gt;&lt;id&gt;6&lt;/id&gt;&lt;name&gt;u6&lt;/name&gt;&lt;age&gt;26&lt;/age&gt;&lt;empid&gt;u126&lt;/empid&gt;&lt;/user&gt;" doc:name="Set Payload"/>
+        <jms:outbound-endpoint exchange-pattern="request-response" queue="testDataQueue" connector-ref="jmsXAConnector" doc:name="JMS"/>
+    </flow>
+    <flow name="xajmsdbtaskFlow2" doc:name="xajmsdbtaskFlow2">
+        <jms:inbound-endpoint queue="testDataQueue" doc:name="JMS">
+            <xa-transaction action="ALWAYS_BEGIN"/>
+        </jms:inbound-endpoint>
+        <logger message="&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;#[payload]" level="INFO" doc:name="Logger"/>
+        <data-mapper:transform config-ref="xml_to_map" doc:name="XML To Map"/>
+        <jdbc-ee:outbound-endpoint exchange-pattern="one-way" queryKey="insertintoUSERDDATA" queryTimeout="-1" connector-ref="jdbcConnectorSource-xa" doc:name="Database">
+            <xa-transaction action="ALWAYS_JOIN"/>
+            <jdbc-ee:query key="insertintoUSERDDATA" value="INSERT INTO SYSTEM.USER_DATA (ID,
+                              NAME,
+                              AGE,
+                              EMP_ID)
+                              VALUES
+                             (#[map-payload:id],
+                              #[map-payload:name],
+                              #[map-payload:age],
+                              #[map-payload:empid])"/>
+        </jdbc-ee:outbound-endpoint>
+    </flow>
+</mule>
