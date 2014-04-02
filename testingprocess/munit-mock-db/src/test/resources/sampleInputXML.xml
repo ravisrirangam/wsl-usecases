@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table><record><field name="COLUMN2" type="java.lang.String">row1</field><field name="COLUMN1" type="java.math.BigDecimal">1</field></record><record><field name="COLUMN2" type="java.lang.String">row2</field><field name="COLUMN1" type="java.math.BigDecimal">2</field></record></table>
