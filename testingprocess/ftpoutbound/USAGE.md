@@ -1,4 +1,4 @@
-#Testing approach for JMS based Mule Project
+#Testing approach for FTP/file based Mule Project
 
 [Purpose](#purpose)
 
@@ -11,11 +11,11 @@
 Purpose
 =======
 
-	* The purpose of this document gives an overview on mocking and unit testing the mule project when it contains the JMS as outbound endpoint.
+	* The purpose of this document gives an overview on mocking and unit testing the mule project when it contains the FTP as outbound endpoint.
 	
 Mflow file
 ===========
-	* Consider the mflow which contains the http inbound,append string message processor,jms outbound endpoint and object to string message processor.
+	* Consider the mflow which contains the http inbound,append string message processor,FTP outbound endpoint and object to string message processor.
 
 Unit Testing and Mocking using Junit Test Case
 ================================================
@@ -25,7 +25,9 @@ Unit Testing and Mocking using Junit Test Case
 	* Create test method which is used to invoke the flow.Pass the flow name as input parameter
 	* Create test methods which covers the possitve,negative and null payload use case.
 	* To mock the JMS outbound can use the below syntax.
-		whenEndpointWithAddress("jms://<QueueName>").thenReturn(mulemessageWithPayload("<pass the data here>"));
+		whenMessageProcessor("outbound-endpoint").ofNamespace("ftp").thenReturnSameEvent();
+		For File
+		whenMessageProcessor("outbound-endpoint").ofNamespace("file").thenReturnSameEvent();
 		
 Test Mule Project
 ==================

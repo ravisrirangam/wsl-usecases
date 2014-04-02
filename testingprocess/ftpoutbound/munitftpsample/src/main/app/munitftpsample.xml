@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ftp="http://www.mulesoft.org/schema/mule/ee/ftp" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/ftp http://www.mulesoft.org/schema/mule/ee/ftp/current/mule-ftp-ee.xsd">
+    <flow name="munitftpsampleFlow" doc:name="munitftpsampleFlow">
+        <file:inbound-endpoint path="F:\vikramwork\file" moveToDirectory="F:\vikramwork\file\proc" responseTimeout="10000" doc:name="File"/>
+        <file:file-to-string-transformer doc:name="File to String"/>
+        <append-string-transformer message=" this is for integration testing" doc:name="Append String"/>
+        <logger message="$$$$ File data is #[message.payload] $$$$$$" level="INFO" doc:name="Logger"/>
+        <ftp:outbound-endpoint host="localhost" port="21" user="vikki" password="test" outputPattern="text.txt" responseTimeout="10000" doc:name="FTP" />
+    </flow>
+</mule>

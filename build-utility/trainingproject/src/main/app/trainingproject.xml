@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:context="http://www.springframework.org/schema/context" xmlns:secure-property-placeholder="http://www.mulesoft.org/schema/mule/secure-property-placeholder" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/secure-property-placeholder http://www.mulesoft.org/schema/mule/secure-property-placeholder/1.0/mule-secure-property-placeholder.xsd">
+    
+    
+    <secure-property-placeholder:config name="Secure_Property_Placeholder" key="${prod.key}" location="credential.properties" doc:name="Secure Property Placeholder" encryptionAlgorithm="Blowfish"/>
+    
+    <context:property-placeholder location="credential.properties,Host.properties"/>
+    
+    <flow name="trainingprojectFlow" doc:name="trainingprojectFlow">
+   
+        <http:inbound-endpoint exchange-pattern="request-response" host="${httphost}" port="${httpport}" path="${httppath}" doc:name="HTTP"/>
+        
+        <logger message="$$$$ propertie values are ${httphost} and ${httpport}  and ${httppath} $$$$$$$$$$" level="INFO" doc:name="Logger"/>
+    </flow>
+</mule>
