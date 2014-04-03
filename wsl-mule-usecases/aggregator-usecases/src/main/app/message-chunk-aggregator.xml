@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
+    <flow name="message-chunk-aggregatorFlow1" doc:name="message-chunk-aggregatorFlow1">
+        <file:inbound-endpoint path="D:\kalyan\test\fileEndpoint\inputfiles" moveToDirectory="D:\kalyan\test\fileEndpoint\inputfilesbak" responseTimeout="10000" doc:name="File"/>
+        <message-chunk-splitter messageSize="1024" doc:name="Message Chunk Splitter"/>
+        <set-property propertyName="MULE_CORRELATION_ID" value="6ed49087-2765-45f6-a9bf-ade2aea363c9" doc:name="Property"/>
+        <set-property propertyName="MULE_CORRELATION_GROUP_SIZE" value="1000" doc:name="Property" />
+        <logger message="PAYLOAD : #[payload]" level="INFO" doc:name="Logger"/>
+        <vm:outbound-endpoint exchange-pattern="one-way" path="message-chunk-queue" doc:name="VM"/>
+    </flow>
+    <flow name="message-chunk-aggregatorFlow2" doc:name="message-chunk-aggregatorFlow2">
+        <vm:inbound-endpoint exchange-pattern="one-way" path="message-chunk-queue" doc:name="VM"/>
+        <message-chunk-aggregator timeout="5000" failOnTimeout="false" doc:name="Message Chunk Aggregator">
+        </message-chunk-aggregator>
+        <object-to-string-transformer doc:name="Object to String"/>
+        <logger message="Message Chunk Aggregator Completed" level="INFO" doc:name="Logger"/>
+    </flow>
+    
+</mule>

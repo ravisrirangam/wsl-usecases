@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:core="http://www.mulesoft.org/schema/mule/core" version="EE-3.5.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+    <flow name="collection-aggregatorFlow3" doc:name="collection-aggregatorFlow3">
+        <http:inbound-endpoint exchange-pattern="request-response" host="localhost" port="8084" doc:name="HTTP" path="collection-aggregator"/>
+        <component class="com.whiteskylabs.aggregators.GenerateListObject" doc:name="Java"/>
+        <collection-splitter doc:name="Collection Splitter"/>
+        <set-property propertyName="MULE_CORRELATION_ID" value="6ed49087-2765-45f6-a9bf-ade2aea363c9" doc:name="Property"/>
+        <set-property propertyName="MULE_CORRELATION_GROUP_SIZE" value="100" doc:name="Property" />
+        <vm:outbound-endpoint path="collection-aggregator" exchange-pattern="one-way"  doc:name="VM"/>
+    </flow>
+    <flow name="collection-aggregatorFlow4" doc:name="collection-aggregatorFlow4">
+        <vm:inbound-endpoint path="collection-aggregator" exchange-pattern="one-way"  doc:name="VM"/>
+        <logger message="PAYLOAD before aggregator :#[payload]" level="INFO" doc:name="Logger"/>
+        <collection-aggregator failOnTimeout="false" doc:name="Collection Aggregator" timeout="5000"/>
+        <logger level="INFO" doc:name="Logger" message="PAYLOAD:#[payload]"/>
+    </flow>
+</mule>
